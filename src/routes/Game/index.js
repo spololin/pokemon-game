@@ -1,9 +1,14 @@
-const GamePage = () => {
+const GamePage = ({onChangePage}) => {
+    const handlerClickButton = () => {
+        onChangePage && onChangePage('app')
+    }
+
     return (
         <div>
-            This is Game Page
+            <p>This is Game Page</p>
+            <button onClick={handlerClickButton}>Back to App</button>
         </div>
     )
 }
 
-export default  GamePage
+export default GamePage
