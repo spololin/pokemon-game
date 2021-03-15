@@ -4,6 +4,7 @@ import Layout from "../../components/AppLayout"
 import PokemonCard from '../../components/AppPokemonCard'
 import backgroundImg from '../../assets/bg2.jpg'
 import styles from './style.module.css'
+import MenuHeader from "../../components/AppMenuHeader";
 
 
 const arrPokemon = [
@@ -148,6 +149,7 @@ const HomePage = ({onChangePage}) => {
 
     return (
         <>
+            <MenuHeader/>
             <Header
                 title="This is header title"
                 descr="This is header description"
