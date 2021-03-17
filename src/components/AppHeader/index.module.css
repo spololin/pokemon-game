@@ -88,3 +88,20 @@
     color: #fafafa;
     line-height: 32px;
 }
+
+button {
+
+    padding: 10px 20px;
+    color: white;
+    background-color: lightseagreen;
+    margin: 25px 0;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+button:hover {
+    color: lightseagreen;
+    background-color: white;
+    cursor: pointer;
+}
