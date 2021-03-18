@@ -26,7 +26,7 @@ const Menu = ({isOpenMenu, onClickMenuBtn}) => {
         }
     ];
     return (
-        <div className={cn(styles.menuContainer, {[styles.active]: isOpenMenu, [styles.deactive]: !isOpenMenu})}>
+        <div className={cn(styles.menuContainer, {[styles.active]: isOpenMenu === true, [styles.deactive]: isOpenMenu === false})}>
             <div className={styles.overlay}/>
             <div className={styles.menuItems}>
                 <ul>

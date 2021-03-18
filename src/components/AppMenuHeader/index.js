@@ -3,7 +3,7 @@ import Menu from "../AppMenu";
 import Navbar from "../AppNavbar";
 
 const MenuHeader = ({bgActive}) => {
-    const [isOpenMenu, setOpenMenu] = useState(false);
+    const [isOpenMenu, setOpenMenu] = useState(null);
 
     const onClickMenuBtn = () => {
         setOpenMenu(prevValue => !prevValue)
