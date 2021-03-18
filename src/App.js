@@ -1,5 +1,5 @@
 // import {useState} from 'react';
-import {Route, Switch, useRouteMatch} from 'react-router-dom';
+import {Route, Switch, useRouteMatch, Redirect} from 'react-router-dom';
 import styles from './styles.module.css'
 import cn from 'classnames';
 import HomePage from "./routes/HomePage";
@@ -15,6 +15,9 @@ const App = () => {
     const match = useRouteMatch('/')
     return (
         <Switch>
+            <Route path='/404' render={() => (
+                <NotFoundPage/>
+            )}/>
             <Route>
                 <>
                     <MenuHeader bgActive={!match.isExact}/>
@@ -26,6 +29,7 @@ const App = () => {
                             <Route path="/contact" component={ContactPage}/>
                             <Route path="/about" component={AboutPage}/>
                             <Route component={NotFoundPage}/>
+                            <Redirect to='/404'/>
                         </Switch>
                     </div>
                     <Footer/>
@@ -33,20 +37,6 @@ const App = () => {
             </Route>
         </Switch>
     )
-    // const [page, setPage] = useState('app');
-    //
-    // const handlerChangePage = (page) => {
-    //     setPage(page)
-    // }
-    //
-    // switch (page) {
-    //     case 'app':
-    //         return <HomePage onChangePage={handlerChangePage}/>
-    //     case 'game':
-    //         return <GamePage onChangePage={handlerChangePage}/>
-    //     default:
-    //         return <HomePage onChangePage={handlerChangePage}/>
-    // }
 }
 
 export default App
