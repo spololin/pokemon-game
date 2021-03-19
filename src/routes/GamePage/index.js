@@ -5,12 +5,16 @@ import PokemonCard from "../../components/AppPokemonCard";
 import database from "../../service/firebase";
 
 const GamePage = () => {
-    const [arrPokemon, setArrPokemon] = useState({})
+    const [arrPokemon, setArrPokemon] = useState([]);
+
+    const getArrPokemon = () => {
+        database.ref('pokemons').once('value', (snapshot) => {
+            setArrPokemon(Object.entries(snapshot.val()).map(item => ({...item[1], id: item[0]})))
+        })
+    }
 
     useEffect(() => {
-        database.ref('pokemons').once('value', (snapshot) => {
-            setArrPokemon(snapshot.val())
-        })
+        getArrPokemon()
     }, [])
 
     // const history = useHistory();
@@ -19,16 +23,20 @@ const GamePage = () => {
     // }
 
     const handlerClickCard = (id) => {
-        setArrPokemon(prevState => {
-            return Object.entries(prevState).reduce((acc, item) => {
-                const pokemon = {...item[1]};
-                if (pokemon.id === id) {
-                    pokemon.active = true;
-                }
-                acc[item[0]] = pokemon;
-                return acc;
-            }, {});
-        });
+        const card = arrPokemon.find(elem => elem.id === id);
+        card.active = card.hasOwnProperty("active") ? !card.active : true;
+        database.ref('pokemons/' + id).set({...card});
+        getArrPokemon()
+        // setArrPokemon(prevState => {
+        //     return Object.entries(prevState).reduce((acc, item) => {
+        //         const pokemon = {...item[1]};
+        //         if (pokemon.id === id) {
+        //             pokemon.active = true;
+        //         }
+        //         acc[item[0]] = pokemon;
+        //         return acc;
+        //     }, {});
+        // });
         // const idx = arrPokemon.findIndex(card => card.id === id);
         // const card = arrPokemon[idx];
         // setArrPokemon([...arrPokemon.slice(0, idx), {...card, active: !card.active}, ...arrPokemon.slice(idx + 1)])
@@ -41,8 +49,8 @@ const GamePage = () => {
             {/*<button onClick={handlerClickButton}>Back to App</button>*/}
             <div className={styles.flex}>
                 {
-                    Object.entries(arrPokemon).map(([key, {id, values, name, type, img, active}]) => <PokemonCard
-                        key={key}
+                    arrPokemon.map(({id, values, name, type, img, active}) => <PokemonCard
+                        key={id}
                         values={values}
                         name={name}
                         type={type}
