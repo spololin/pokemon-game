@@ -1,7 +1,7 @@
 import styles from './style.module.css'
 import cn from 'classnames'
 
-const Navbar = ({isOpenMenu, onClickMenuBtn}) => {
+const Navbar = ({isOpenMenu, onClickMenuBtn, bgActive}) => {
     const toggleActive = isOpenMenu ? styles.active : styles.deactive;
 
     const handlerClickMenuBtn = () => {
@@ -9,14 +9,14 @@ const Navbar = ({isOpenMenu, onClickMenuBtn}) => {
     }
 
     return (
-        <nav id={styles.navbar}>
+        <nav id={styles.navbar} className={cn({[styles.bgActive]: bgActive})}>
             <div className={styles.navWrapper}>
                 <p className={styles.brand}>
                     LOGO
                 </p>
-                <a className={cn(styles.menuButton, toggleActive)}>
-                    <span onClick={handlerClickMenuBtn}/>
-                </a>
+                <div className={cn(styles.menuButton, toggleActive)} onClick={handlerClickMenuBtn}>
+                    <span/>
+                </div>
             </div>
         </nav>
     )
