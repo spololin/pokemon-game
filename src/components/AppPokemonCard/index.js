@@ -2,7 +2,8 @@ import styles from './index.module.css'
 import cn from 'classnames'
 import cardBackgroundImg from '../../assets/card-back-side.jpg'
 
-const PokemonCard = ({values, img, name, type, id, isActive, onClickCard}) => {
+const PokemonCard = ({values, img, name, type, id, isActive = false, onClickCard}) => {
+    console.log(isActive)
     const handlerClickCard = () => {
         onClickCard && onClickCard(id)
     }
