@@ -164,7 +164,7 @@
 button {
     padding: 15px 60px;
     color: white;
-    background-color: lightseagreen;
+    background-color: #20b2aa;
     margin: 25px 0;
     border: none;
     border-radius: 5px;
@@ -172,7 +172,5 @@ button {
 }
 
 button:hover {
-    /*color: lightseagreen;*/
-    /*background-color: white;*/
     cursor: pointer;
 }
