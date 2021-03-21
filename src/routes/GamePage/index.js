@@ -6,22 +6,18 @@ import database from "../../service/firebase";
 const GamePage = () => {
     const [arrPokemon, setArrPokemon] = useState([]);
 
-    const getArrPokemon = () => {
+    useEffect(() => {
         database.ref('pokemons').once('value', (snapshot) => {
             setArrPokemon(Object.entries(snapshot.val()).map(item => ({...item[1], id: item[0]})))
         })
-    }
-
-    useEffect(() => {
-        getArrPokemon()
     }, [])
 
     const handlerClickCard = (id) => {
         const card = arrPokemon.find(elem => elem.id === id);
-        console.log(card)
         card.active = card.hasOwnProperty("active") ? !card.active : true;
-        database.ref('pokemons/' + id).set({...card});
-        getArrPokemon();
+        database.ref('pokemons/' + id).set({...card}).then(() => {
+            setArrPokemon(prevValue => prevValue.map(item => item.id === id ? {...card} : item))
+        });
     }
 
     const handlerClickAddPokemon = () => {
@@ -53,8 +49,9 @@ const GamePage = () => {
             "weight": 60
         }
         const newKey = database.ref().child('pokemons').push().key;
-        database.ref('pokemons/' + newKey).set({...cardNewPokemon, id: newKey});
-        getArrPokemon()
+        database.ref('pokemons/' + newKey).set({...cardNewPokemon, id: newKey}).then(() => {
+            setArrPokemon(prevValue => ([...prevValue.slice(), {...cardNewPokemon, id: newKey}]))
+        });
     }
 
     return (
