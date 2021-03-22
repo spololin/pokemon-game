@@ -12,7 +12,35 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-export const fire = firebase;
-export const database = fire.database();
 
-export default database;
+export default class Firebase {
+    constructor() {
+        this.fire = firebase;
+        this.database = this.fire.database();
+    }
+
+    getPokemonSocket = (cb) => {
+        this.database.ref('pokemons').on('value', (snapshot) => {
+            cb(Object.entries(snapshot.val()).map(item => ({
+                ...item[1],
+                id: item[0]
+            })))
+        })
+    }
+
+    getPokemonsOnce = async () => {
+        return await this.database.ref('pokemons').once('value').then(snapshot => Object.entries(snapshot.val()).map(item => ({
+            ...item[1],
+            id: item[0]
+        })))
+    }
+
+    postPokemon = async (key, pokemon) => {
+        return await this.database.ref('pokemons/' + key).set(pokemon)
+    }
+
+    addPokemon = (data) => {
+        const newKey = this.database.ref().child('pokemons').push().key;
+        this.database.ref('pokemons/' + newKey).set(data);
+    }
+}
