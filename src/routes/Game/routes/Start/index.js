@@ -1,10 +1,14 @@
 import {useState, useEffect, useContext} from 'react';
-import styles from "../style.module.css";
+import {useHistory} from 'react-router-dom';
+import styles from "./style.module.css";
 import PokemonCard from "../../../../components/AppPokemonCard";
 import {FireBaseContext} from "../../../../context/firebaseContext";
+import {PokemonContext} from "../../../../context/pokemonContext";
 
 const StartPage = () => {
     const firebase = useContext(FireBaseContext);
+    const selectedPokemon = useContext(PokemonContext);
+    const history = useHistory();
     const [arrPokemon, setArrPokemon] = useState([]);
 
     useEffect(() => {
@@ -14,42 +18,29 @@ const StartPage = () => {
     }, [])
 
     const handlerClickCard = (id) => {
+        let arrSelectedPokemon = selectedPokemon.selectedArrPokemon;
+        if (arrSelectedPokemon.length > 5) {
+            return
+        }
+
         const card = arrPokemon.find(elem => elem.id === id);
-        card.active = card.hasOwnProperty("active") ? !card.active : true;
-        firebase.postPokemon(id, card).then(() => {
-            setArrPokemon(prevValue => prevValue.map(item => item.id === id ? {...card} : item))
-        })
+        card.selected = !card.hasOwnProperty("selected") ? true : !card.selected;
+        setArrPokemon(prevValue => prevValue.map(item => item.id === id ? {...card} : item));
+
+        let arr = [...selectedPokemon.selectedArrPokemon];
+        const idx = arrSelectedPokemon.findIndex(elem => elem.id === id);
+        if (idx === -1) {
+            arr.push(card);
+        } else {
+            arr = arr.filter(item => item.id !== id);
+        }
+        selectedPokemon.setSelectedArrPokemon(arr);
     }
 
     const handlerClickAddPokemon = () => {
-        const cardNewPokemon = {
-            "abilities": [
-                "static",
-                "lightning-rod"
-            ],
-            "active": false,
-            "base_experience": 112,
-            "height": 4,
-            "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
-            "name": "pikachu",
-            "stats": {
-                "attack": 55,
-                "defense": 40,
-                "hp": 35,
-                "special-attack": 50,
-                "special-defense": 50,
-                "speed": 90
-            },
-            "type": "electric",
-            "values": {
-                "bottom": 1,
-                "left": 5,
-                "right": 5,
-                "top": 6
-            },
-            "weight": 60
+        if (selectedPokemon.selectedArrPokemon.length) {
+            history.push('/game/board')
         }
-        firebase.addPokemon(cardNewPokemon)
     }
 
     return (
@@ -60,16 +51,23 @@ const StartPage = () => {
 
             <div className={styles.flex}>
                 {
-                    arrPokemon.map(({id, values, name, type, img, active}) => <PokemonCard
-                        key={id}
-                        values={values}
-                        name={name}
-                        type={type}
-                        img={img}
-                        id={id}
-                        isActive={active}
-                        onClickCard={handlerClickCard}
-                    />)
+                    arrPokemon.map(({id, values, name, type, img, selected = false}) => {
+                        return (
+                            <div className={styles.root}>
+                                <PokemonCard
+                                    key={id}
+                                    values={values}
+                                    name={name}
+                                    type={type}
+                                    img={img}
+                                    id={id}
+                                    isActive
+                                    isSelected={selected}
+                                    onClickCard={handlerClickCard}
+                                />
+                            </div>
+                        )
+                    })
                 }
             </div>
         </div>

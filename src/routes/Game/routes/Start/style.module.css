@@ -7,4 +7,12 @@
 
 .addNew {
     text-align: center;
+    margin-bottom: 30px;
+}
+
+.root {
+    width: 268px;
+    height: 388px;
+    margin: 16px;
+    perspective: 1000px;
 }

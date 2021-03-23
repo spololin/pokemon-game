@@ -1,10 +1,31 @@
 import styles from './style.module.css';
+import {PokemonContext} from "../../../../context/pokemonContext";
+import {useContext} from "react";
+import PokemonCard from "../../../../components/AppPokemonCard";
 
 const BoardPage = () => {
+    const pokemon = useContext(PokemonContext);
+
     return (
         <div className={styles.root}>
             <div className={styles.playerOne}>
-
+                {
+                    pokemon.selectedArrPokemon.map(item => (
+                        <div className={styles.card}>
+                            <PokemonCard
+                                key={item.id}
+                                values={item.values}
+                                name={item.name}
+                                type={item.type}
+                                img={item.img}
+                                id={item.id}
+                                isActive
+                                minimize
+                                className={styles.card}
+                            />
+                        </div>
+                    ))
+                }
             </div>
             <div className={styles.board}>
                 <div className={styles.boardPlate}>1</div>
