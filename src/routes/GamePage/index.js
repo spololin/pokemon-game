@@ -1,23 +1,24 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import styles from "../GamePage/style.module.css";
 import PokemonCard from "../../components/AppPokemonCard";
-import database from "../../service/firebase";
+import {FireBaseContext} from "../../context/firebaseContext";
 
 const GamePage = () => {
+    const firebase = useContext(FireBaseContext);
     const [arrPokemon, setArrPokemon] = useState([]);
 
     useEffect(() => {
-        database.ref('pokemons').once('value', (snapshot) => {
-            setArrPokemon(Object.entries(snapshot.val()).map(item => ({...item[1], id: item[0]})))
+        firebase.getPokemonSocket((pokemons) => {
+            setArrPokemon(pokemons)
         })
     }, [])
 
     const handlerClickCard = (id) => {
         const card = arrPokemon.find(elem => elem.id === id);
         card.active = card.hasOwnProperty("active") ? !card.active : true;
-        database.ref('pokemons/' + id).set({...card}).then(() => {
+        firebase.postPokemon(id, card).then(() => {
             setArrPokemon(prevValue => prevValue.map(item => item.id === id ? {...card} : item))
-        });
+        })
     }
 
     const handlerClickAddPokemon = () => {
@@ -48,16 +49,13 @@ const GamePage = () => {
             },
             "weight": 60
         }
-        const newKey = database.ref().child('pokemons').push().key;
-        database.ref('pokemons/' + newKey).set({...cardNewPokemon, id: newKey}).then(() => {
-            setArrPokemon(prevValue => ([...prevValue.slice(), {...cardNewPokemon, id: newKey}]))
-        });
+        firebase.addPokemon(cardNewPokemon)
     }
 
     return (
         <div>
             <div className={styles.addNew}>
-                <button onClick={handlerClickAddPokemon}>Add new pokemon</button>
+                <button onClick={handlerClickAddPokemon}>Start Game</button>
             </div>
 
             <div className={styles.flex}>

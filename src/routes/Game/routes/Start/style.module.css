@@ -1,0 +1,18 @@
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.addNew {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.root {
+    width: 268px;
+    height: 388px;
+    margin: 16px;
+    perspective: 1000px;
+}
